@@ -27,7 +27,7 @@ export default function Certificates() {
       <section id="certificates" className="py-20 px-6 bg-gradient-to-b from-transparent to-white/60 dark:to-gray-900/60 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-base font-medium text-blue-600 dark:text-blue-400 tracking-wider uppercase mb-2">My Achievements</h2>
+          <h2 className="text-base font-medium text-blue-600 dark:text-blue-400 tracking-wider uppercase mb-2">My Certifications</h2>
           <h3 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-300">Certificates & Awards</h3>
         </div>
 

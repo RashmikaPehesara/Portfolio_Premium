@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import clientData from "@/data/clientData";
-import { Folder, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { Folder, X, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import Image from "next/image";
 
 export default function Gallery() {
@@ -12,7 +12,6 @@ export default function Gallery() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [zoomed, setZoomed] = useState(false);
   
   const scrollRef = useRef(null);
   const mobileScrollRef = useRef(null);
@@ -28,23 +27,19 @@ export default function Gallery() {
   const openFolder = (folder) => {
     setActiveFolder(folder);
     setCurrentImageIndex(0);
-    setZoomed(false);
   };
 
   const closeGallery = () => {
     setActiveFolder(null);
-    setZoomed(false);
   };
 
   const nextImage = useCallback(() => {
     if (!activeFolder) return;
-    setZoomed(false);
     setCurrentImageIndex((prev) => (prev + 1) % activeFolder.images.length);
   }, [activeFolder]);
 
   const prevImage = useCallback(() => {
     if (!activeFolder) return;
-    setZoomed(false);
     setCurrentImageIndex((prev) => 
       prev === 0 ? activeFolder.images.length - 1 : prev - 1
     );
@@ -62,17 +57,17 @@ export default function Gallery() {
     };
   }, [activeFolder]);
 
-  // Auto-scroll effect: 4 seconds
+  // Auto-scroll effect: 10 seconds, DOES NOT depend on index
   useEffect(() => {
-    if (!activeFolder) return;
+    if (!activeFolder || isMobile) return;
 
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % activeFolder.images.length);
-    }, 4000);
+    }, 10000);
 
-    // Cleans up on unmount or when currentImageIndex changes
+    // Cleans up on unmount or when modal closes
     return () => clearInterval(interval);
-  }, [activeFolder, currentImageIndex]);
+  }, [activeFolder, isMobile]);
 
   // Keyboard navigation for Desktop
   useEffect(() => {
@@ -89,27 +84,57 @@ export default function Gallery() {
 
   // Folder carousel scrolling logic (Desktop)
   const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -320, behavior: "smooth" });
-    }
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: -320, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
-    }
+    if (scrollRef.current) scrollRef.current.scrollBy({ left: 320, behavior: "smooth" });
   };
 
   // Mobile Folder navigation logic
   const mobileScrollLeft = () => {
-    if (mobileScrollRef.current) {
-      mobileScrollRef.current.scrollBy({ left: -window.innerWidth * 0.8, behavior: "smooth" });
-    }
+    if (mobileScrollRef.current) mobileScrollRef.current.scrollBy({ left: -window.innerWidth * 0.8, behavior: "smooth" });
   };
 
   const mobileScrollRight = () => {
-    if (mobileScrollRef.current) {
-      mobileScrollRef.current.scrollBy({ left: window.innerWidth * 0.8, behavior: "smooth" });
+    if (mobileScrollRef.current) mobileScrollRef.current.scrollBy({ left: window.innerWidth * 0.8, behavior: "smooth" });
+  };
+
+  // 1. Force Download Fetch + Blob
+  const handleDownload = async (e) => {
+    if (e) e.stopPropagation();
+    try {
+      const url = activeFolder.images[currentImageIndex];
+      const response = await fetch(url, { mode: "cors" });
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `image-${currentImageIndex}.jpg`;
+      
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+
+  // 2. Drag Logic
+  const handleSwipe = (info) => {
+    if (!activeFolder) return;
+    const offset = info.offset.x;
+
+    if (offset < -80) {
+      // swipe left → NEXT
+      setCurrentImageIndex((prev) => (prev + 1) % activeFolder.images.length);
+    } 
+    else if (offset > 80) {
+      // swipe right → PREVIOUS
+      setCurrentImageIndex((prev) => (prev - 1 + activeFolder.images.length) % activeFolder.images.length);
     }
   };
 
@@ -123,14 +148,19 @@ export default function Gallery() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 backdrop-blur-md"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-0 m-0"
+          style={{ 
+            background: "rgba(0, 0, 0, 0.95)", 
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+          }}
         >
-          {/* Close Button / Header */}
-          <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center z-[100000] pointer-events-none">
+          {/* Header */}
+          <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center z-[10000]">
             <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-md">{activeFolder.folder}</h3>
             <button 
               onClick={closeGallery}
-              className="p-3 bg-black/50 hover:bg-black/80 rounded-full text-white transition-all backdrop-blur focus:outline-none shadow-lg pointer-events-auto"
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all backdrop-blur focus:outline-none shadow-lg"
             >
               <X size={24} />
             </button>
@@ -140,22 +170,18 @@ export default function Gallery() {
           <motion.div 
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            onDragEnd={(e, info) => {
-              if (info.offset.x < -50) nextImage();
-              if (info.offset.x > 50) prevImage();
-            }}
-            className="relative w-full h-full flex items-center justify-center pointer-events-auto"
+            dragElastic={0.1}
+            onDragEnd={(e, info) => handleSwipe(info)}
+            className="flex-grow w-full flex items-center justify-center overflow-hidden mb-24 mt-20"
           >
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentImageIndex}
-                initial={{ opacity: 0.7 }}
-                animate={{ opacity: 1, scale: zoomed ? 2 : 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, ease: "linear" }}
-                onClick={(e) => { e.stopPropagation(); setZoomed(!zoomed); }}
-                className="relative flex items-center justify-center w-[90vw] h-[85vh] cursor-pointer"
-                style={{ cursor: zoomed ? "zoom-out" : "zoom-in" }}
+                initial={{ x: 300 }}
+                animate={{ x: 0 }}
+                exit={{ x: -300 }}
+                transition={{ duration: 0.25 }}
+                className="relative flex items-center justify-center w-full max-w-[95vw] h-full"
               >
                 <Image
                   src={activeFolder.images[currentImageIndex]}
@@ -163,7 +189,7 @@ export default function Gallery() {
                   fill
                   loading={currentImageIndex === 0 ? "eager" : "lazy"}
                   sizes="100vw"
-                  className="object-contain drop-shadow-2xl select-none pointer-events-none"
+                  className="object-contain select-none pointer-events-none"
                   draggable={false}
                 />
               </motion.div>
@@ -171,36 +197,38 @@ export default function Gallery() {
           </motion.div>
 
           {/* Navigation Controls (Desktop Only) */}
-          {!isMobile && !zoomed && (
+          {!isMobile && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 p-4 bg-black/50 hover:bg-black/80 rounded-full text-white transition-all backdrop-blur focus:outline-none shadow-xl z-[100000]"
+                className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 p-4 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all backdrop-blur focus:outline-none shadow-xl z-[10000]"
               >
                 <ChevronLeft size={32} />
               </button>
               
               <button
                 onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 p-4 bg-black/50 hover:bg-black/80 rounded-full text-white transition-all backdrop-blur focus:outline-none shadow-xl z-[100000]"
+                className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 p-4 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all backdrop-blur focus:outline-none shadow-xl z-[10000]"
               >
                 <ChevronRight size={32} />
               </button>
             </>
           )}
 
-          {/* Image Counter */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white font-medium px-5 py-2.5 rounded-full z-[100000] flex items-center gap-2 pointer-events-none shadow-xl">
-            {currentImageIndex + 1} / {activeFolder.images.length}
-          </div>
-          
-          {/* Zoom Hint Desktop */}
-          {!isMobile && (
-            <div className="absolute bottom-6 right-8 text-white/50 text-xs font-medium bg-black/40 px-3 py-1.5 rounded-full z-[100000] flex items-center gap-2 pointer-events-none">
-              {zoomed ? <ZoomOut size={14} /> : <ZoomIn size={14} />}
-              {zoomed ? 'Zoom Out' : 'Zoom In'}
+          {/* Footer Items (Centered Below Image) */}
+          <div className="absolute bottom-6 left-0 right-0 flex flex-col items-center justify-center gap-4 z-[10000]">
+            <button
+              onClick={handleDownload}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-5 py-2.5 rounded-lg text-white text-sm font-medium transition-colors shadow-lg flex items-center gap-2"
+            >
+              <Download size={16} /> Download
+            </button>
+            
+            <div className="bg-black/50 backdrop-blur-md text-white font-medium px-5 py-2 rounded-full text-sm shadow-xl flex items-center justify-center">
+              {currentImageIndex + 1} / {activeFolder.images.length}
             </div>
-          )}
+          </div>
+
         </motion.div>
       )}
     </AnimatePresence>
@@ -230,7 +258,7 @@ export default function Gallery() {
             className="flex overflow-x-auto gap-6 scroll-smooth py-4 w-[888px]"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {clientData.gallery.map((folder, index) => (
+            {clientData.gallery.map((folder) => (
               <motion.div
                 key={folder.id}
                 whileHover={{ y: -5 }}
