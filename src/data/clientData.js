@@ -1,12 +1,12 @@
 const clientData = {
-  name: "John Doe",
+  name: "Supun Dissanayake",
   tagline: "Frontend Developer & UI/UX Designer",
   about: "I am a passionate frontend developer specializing in building modern, responsive, and performance-optimized web applications. With a strong eye for design and detail, I create seamless user experiences using Next.js and Tailwind CSS.",
   
   contact: {
-    email: "hello@johndoe.com",
+    email: "hello@supundissanayake.com",
     phone: "+94 777 123 456",
-    location: "New York, USA",
+    location: "No: 215/43, Samagi Road,Gampaha, Sri Lanka",
   },
 
   socialLinks: {

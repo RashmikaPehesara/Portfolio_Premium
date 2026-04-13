@@ -136,7 +136,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   className={`w-full px-5 py-4 rounded-xl border-2 ${errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all shadow-sm font-medium`}
-                  placeholder="John Doe"
+                  placeholder="Supun Dissanayake" //Change to your name
                 />
                 {errors.name && <p className="text-red-500 text-xs mt-1 font-bold">{errors.name}</p>}
               </div>
@@ -150,7 +150,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-5 py-4 rounded-xl border-2 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all shadow-sm font-medium`}
-                  placeholder="john@example.com"
+                  placeholder="hello@supundissanayake.com" //Change to your email
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1 font-bold">{errors.email}</p>}
               </div>
