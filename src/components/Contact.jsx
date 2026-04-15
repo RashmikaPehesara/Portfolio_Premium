@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -139,42 +140,60 @@ export default function Contact() {
               <div>
                 <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors duration-300" htmlFor="name">Your Name</label>
                 <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full px-5 py-4 rounded-xl border-2 ${errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all shadow-sm font-medium`}
-                  placeholder={clientData.name} //Change to your name
-                />
+  type="text"
+  id="name"
+  name="name"
+  value={formData.name || ""}
+  onChange={handleChange}
+  placeholder={clientData.name || "Your Name"}
+  className={`w-full px-5 py-4 rounded-xl border-2 
+  ${errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} 
+  bg-white dark:bg-gray-800 
+  text-gray-900 dark:text-white 
+  placeholder:text-gray-500 dark:placeholder:text-gray-400 
+  placeholder:opacity-100
+  outline-none focus:ring-2 transition-all shadow-sm font-medium`}
+/>  
                 {errors.name && <p className="text-red-500 text-xs mt-1 font-bold">{errors.name}</p>}
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors duration-300" htmlFor="email">Your Email</label>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`w-full px-5 py-4 rounded-xl border-2 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all shadow-sm font-medium`}
-                  placeholder={clientData.contact.email} //Change to your email
-                />
+  type="email"
+  id="email"
+  name="email"
+  value={formData.email || ""}
+  onChange={handleChange}
+  placeholder={clientData.contact.email || "Your Email"}
+  className={`w-full px-5 py-4 rounded-xl border-2 
+  ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} 
+  bg-white dark:bg-gray-800 
+  text-gray-900 dark:text-white 
+  placeholder:text-gray-500 dark:placeholder:text-gray-400 
+  placeholder:opacity-100
+  outline-none focus:ring-2 transition-all shadow-sm font-medium`}
+/>
                 {errors.email && <p className="text-red-500 text-xs mt-1 font-bold">{errors.email}</p>}
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2 transition-colors duration-300" htmlFor="message">Message</label>
                 <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={4}
-                  className={`w-full px-5 py-4 rounded-xl border-2 ${errors.message ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all resize-none shadow-sm font-medium`}
-                  placeholder="How can I help you?"
-                />
+  id="message"
+  name="message"
+  value={formData.message || ""}
+  onChange={handleChange}
+  rows={4}
+  placeholder="How can I help you?"
+  className={`w-full px-5 py-4 rounded-xl border-2 
+  ${errors.message ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} 
+  bg-white dark:bg-gray-800 
+  text-gray-900 dark:text-white 
+  placeholder:text-gray-500 dark:placeholder:text-gray-400 
+  placeholder:opacity-100
+  outline-none focus:ring-2 transition-all resize-none shadow-sm font-medium`}
+/>
                 {errors.message && <p className="text-red-500 text-xs mt-1 font-bold">{errors.message}</p>}
               </div>
 
