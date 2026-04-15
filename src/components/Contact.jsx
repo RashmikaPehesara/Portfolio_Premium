@@ -80,18 +80,27 @@ export default function Contact() {
             </div>
 
             <div className="space-y-8">
-              {clientData.contact.email && (
-                <div className="flex items-start gap-5">
-                  <div className="w-14 h-14 bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-blue-100 dark:border-gray-600 transition-colors duration-300">
-                    <Mail size={24} />
-                  </div>
-                  <div>
-                    <p className="text-base font-medium text-gray-500 dark:text-gray-400 mb-1">Email Me At</p>
-                    <a href={`mailto:${clientData.contact.email}`} className="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                      {clientData.contact.email}
-                    </a>
-                  </div>
-                </div>
+  {clientData.contact.email && (
+    <div className="flex items-start gap-5">
+      <div className="w-14 h-14 bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-blue-100 dark:border-gray-600 transition-colors duration-300">
+        <Mail size={24} />
+      </div>
+
+      <div className="min-w-0">
+        {/* Title */}
+        <p className="text-base font-medium text-gray-500 dark:text-gray-400 mb-1">
+          Email Me At
+        </p>
+
+        {/* Email */}
+        <a
+          href={`mailto:${clientData.contact.email}`}
+          className="text-lg md:text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors break-all block"
+        >
+          {clientData.contact.email}
+        </a>
+      </div>
+    </div>
               )}
               
               {clientData.contact.phone && (
@@ -136,7 +145,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   className={`w-full px-5 py-4 rounded-xl border-2 ${errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all shadow-sm font-medium`}
-                  placeholder="Supun Dissanayake" //Change to your name
+                  placeholder={clientData.name} //Change to your name
                 />
                 {errors.name && <p className="text-red-500 text-xs mt-1 font-bold">{errors.name}</p>}
               </div>
@@ -150,7 +159,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-5 py-4 rounded-xl border-2 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 transition-all shadow-sm font-medium`}
-                  placeholder="hello@supundissanayake.com" //Change to your email
+                  placeholder={clientData.contact.email} //Change to your email
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1 font-bold">{errors.email}</p>}
               </div>

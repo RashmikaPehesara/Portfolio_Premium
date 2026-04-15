@@ -51,9 +51,9 @@ const EducationCard = ({ item, index }) => {
           <h4 className="text-3xl font-semibold mb-2 text-gray-900 dark:text-white leading-tight transition-colors duration-300">{item.degree}</h4>
         </div>
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-1 rounded-full shadow-sm">
-            {item.year}
-          </span>
+          <span className="text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-1 rounded-full shadow-sm whitespace-nowrap">
+  {item.year}
+</span>
           <h5 className="text-base font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">{item.school}</h5>
         </div>
         <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-base transition-colors duration-300">

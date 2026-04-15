@@ -59,26 +59,26 @@ export default function Projects() {
 
                 {/* Actions Bottom Bar */}
                 <div className="flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-700 mt-auto transition-colors duration-300">
-                  <a 
-                    href={project.demoLink} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:opacity-90 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-                  >
-                    <ExternalLink size={16} />
-                    View Demo
-                  </a>
+  <a 
+    href={project.demoLink} 
+    target="_blank" 
+    rel="noreferrer"
+    className="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap min-w-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+  >
+    <ExternalLink size={16} className="shrink-0" />
+    <span className="truncate">View Demo</span>
+  </a>
                   
                   {project.showCode && project.codeLink && (
-                    <a 
-                      href={project.codeLink} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-                    >
-                      <Code size={16} />
-                      View Code
-                    </a>
+  <a 
+    href={project.codeLink} 
+    target="_blank" 
+    rel="noreferrer"
+    className="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap min-w-0 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-200 dark:hover:bg-gray-600 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+  >
+    <Code size={16} className="shrink-0" />
+    <span className="truncate">View Code</span>
+  </a>
                   )}
                 </div>
               </div>
